@@ -6,14 +6,29 @@ using System.Threading.Tasks;
 
 namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
 {
-    internal class Noeud
+    internal class Noeud<T>
     {
-        private int id;
-        public int Id { get { return id; } }
+        private T valeur;
+        public T Valeur { get { return valeur; } }
 
-        public Noeud(int id)
+        public Noeud(T valeur)
         {
-            this.id = id;
+            this.valeur = valeur;
+        }
+
+        public override string ToString()
+        {
+            return Valeur?.ToString() ?? "null";
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Noeud<T> autre && EqualityComparer<T>.Default.Equals(Valeur, autre.Valeur);
+        }
+
+        public override int GetHashCode()
+        {
+            return EqualityComparer<T>.Default.GetHashCode(Valeur);
         }
     }
 }
