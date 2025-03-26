@@ -59,14 +59,14 @@ class Program
         string cheminFichier = "MetroParis.xlsx"; // à adapter si dans un dossier
 
         // Importation
-        LectureCSV.ChargerInfosCSV(cheminFichier, grapheMetro);
+        //LectureCSV.ChargerInfosCSV(cheminFichier, grapheMetro);
 
-        Console.WriteLine("Import terminé !");
-        Console.WriteLine($"Nombre de stations : {grapheMetro.Noeuds.Count}");
-        Console.WriteLine($"Nombre de liaisons : {grapheMetro.Liens.Count}");
+        //Console.WriteLine("Import terminé !");
+        //Console.WriteLine($"Nombre de stations : {grapheMetro.Noeuds.Count}");
+        //Console.WriteLine($"Nombre de liaisons : {grapheMetro.Liens.Count}");
 
         // Exemple de parcours
-        var premier = grapheMetro.Noeuds[0];
-        grapheMetro.BFS(premier);
+        //var premier = grapheMetro.Noeuds[0];
+        //grapheMetro.BFS(premier);
     }
 }
