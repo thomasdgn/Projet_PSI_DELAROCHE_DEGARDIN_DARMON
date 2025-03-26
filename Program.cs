@@ -50,5 +50,23 @@ class Program
         Console.WriteLine("\n===== Détection de cycle =====");
         bool aCycle = graphe.ContientCycle();
         Console.WriteLine(aCycle ? "Le graphe contient un cycle." : "Le graphe ne contient pas de cycle.");
+
+
+        // 7. Test importation du .csv
+        var grapheMetro = new Graphe<Station>();
+
+        // Chemin vers le fichier Excel
+        string cheminFichier = "MetroParis.xlsx"; // à adapter si dans un dossier
+
+        // Importation
+        LectureCSV.ChargerInfosCSV(cheminFichier, grapheMetro);
+
+        Console.WriteLine("Import terminé !");
+        Console.WriteLine($"Nombre de stations : {grapheMetro.Noeuds.Count}");
+        Console.WriteLine($"Nombre de liaisons : {grapheMetro.Liens.Count}");
+
+        // Exemple de parcours
+        var premier = grapheMetro.Noeuds[0];
+        grapheMetro.BFS(premier);
     }
 }
