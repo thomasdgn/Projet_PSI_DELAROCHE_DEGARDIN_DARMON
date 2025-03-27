@@ -6,7 +6,7 @@ class Program
     static void Main(string[] args)
     {
         // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-        // ⚙️ 1. Création du graphe de test
+        // Création du graphe de test
         var graphe = new Graphe<string>();
 
         var A = new Noeud<string>("A");
@@ -33,30 +33,30 @@ class Program
         graphe.AfficherMatriceAdjacence();
 
         // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-        // 🔄 3. Parcours BFS
+        // Parcours BFS
         Console.WriteLine("\n===== Parcours en largeur (BFS) depuis A =====");
         graphe.BFS(A);
 
-        // 🌿 4. Parcours DFS
+        // Parcours DFS
         Console.WriteLine("\n===== Parcours en profondeur (DFS) depuis A =====");
         graphe.DFS(A);
 
-        // 5. Test Connexité
+        // Test Connexité
         Console.WriteLine("\n===== Test de connexité =====");
         bool connexe = graphe.EstConnexe();
         Console.WriteLine(connexe ? "Le graphe est connexe." : "Le graphe n'est pas connexe.");
 
-        // 6. Test Cycle
+        // Test Cycle
         Console.WriteLine("\n===== Détection de cycle =====");
         bool aCycle = graphe.ContientCycle();
         Console.WriteLine(aCycle ? "Le graphe contient un cycle." : "Le graphe ne contient pas de cycle.");
 
 
-        // 7. Test importation du .csv
+        // Test importation du .csv
         var grapheMetro = new Graphe<Station>();
 
         // Chemin vers le fichier Excel
-        string cheminFichier = "MetroParis.xlsx"; // à adapter si dans un dossier
+        string cheminFichier = "MetroParis.xlsx"; // A adapter si dans un dossier
 
         // Importation
         //LectureCSV.ChargerInfosCSV(cheminFichier, grapheMetro);
