@@ -46,5 +46,6 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
         {
             return Id.GetHashCode();
         }
+
     }
 }
