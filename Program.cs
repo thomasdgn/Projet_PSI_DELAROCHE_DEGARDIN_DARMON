@@ -56,21 +56,8 @@ class Program
         // 7. Test importation du .csv
         var grapheMetro = new Graphe<Station>();
 
-        // Chemin vers le fichier Excel
-        //string cheminFichier = "MetroParis.xlsx"; // à adapter si dans un dossier
 
-        // Importation
-
-        //LectureCSV.ChargerInfosCSV(cheminFichier, grapheMetro);
-
-        //Console.WriteLine($"Nombre de stations : {grapheMetro.Noeuds.Count}");
-        //Console.WriteLine($"Nombre de liaisons : {grapheMetro.Liens.Count}");
-
-        // Exemple : afficher la liste d'adjacence
-        //graphe.AfficherListeAdjacence();
-
-
-        // Autre méthode via MySQL :
+        // Import données via MySQL :
 
         string cheminSQL = "server=localhost;user=root;password=root;database=metro;";
 
@@ -94,6 +81,11 @@ class Program
 
         Console.WriteLine($"Stations : {grapheMetro.Noeuds.Count}");
         Console.WriteLine($"Liaisons : {grapheMetro.Liens.Count}");
+
+
+        // Début de l'interface graphique :
+
+
 
 
     }
