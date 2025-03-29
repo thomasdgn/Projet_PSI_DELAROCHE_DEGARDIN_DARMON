@@ -28,55 +28,53 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
             var tableNoeuds = dataSet.Tables["Noeuds"];
             var tableArcs = dataSet.Tables["Arcs"];
 
+            Dictionary<int, Noeud<Station>> noeuds = new();
+
             // --- Lecture des stations ---
             foreach (DataRow row in tableNoeuds.Rows.Cast<DataRow>().Skip(1))
             {
-                if (string.IsNullOrWhiteSpace(row[0]?.ToString())) continue;
+                if (!int.TryParse(row[0]?.ToString(), out int id)) continue;
 
-                int id = int.Parse(row[0].ToString());
-                string ligne = row[3].ToString();
-                string nom = row[4].ToString();
-                string valeurLongitude = row[5]?.ToString()?.Trim();
-                if (!double.TryParse(valeurLongitude, NumberStyles.Float, CultureInfo.InvariantCulture, out double longitude))
-                {
-                    Console.WriteLine($"Erreur de conversion longitude à la ligne : {valeurLongitude}");
-                    continue; // on saute cette station
-                }
-                string valeurLatitude = row[6]?.ToString()?.Trim();
-                if (!double.TryParse(valeurLatitude, NumberStyles.Float, CultureInfo.InvariantCulture, out double latitude))
-                {
-                    Console.WriteLine($"Erreur de conversion latitude à la ligne : {valeurLatitude}");
-                    continue;
-                }
+                string ligne = row[3]?.ToString();
+                string nom = row[4]?.ToString();
+                if (!double.TryParse(row[5]?.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out double lon)) continue;
+                if (!double.TryParse(row[6]?.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out double lat)) continue;
 
-
-                var station = new Station(id, nom, ligne, longitude, latitude);
-                Stations.Add(station);
-
+                var station = new Station(id, nom, ligne, lat, lon);
                 var noeud = new Noeud<Station>(station);
-                Noeuds[id] = noeud;
+
+                noeuds[id] = noeud;
                 graphe.AjouterNoeud(noeud);
             }
 
             // --- Lecture des liaisons ---
             foreach (DataRow row in tableArcs.Rows.Cast<DataRow>().Skip(1))
             {
-                if (!int.TryParse(row["Station Id"]?.ToString(), out int idStation)) continue;
+                if (!int.TryParse(row["ID Station"]?.ToString(), out int idSource)) continue;
 
-                // Précédent
-                if (int.TryParse(row["Précédent"]?.ToString(), out int precedentId))
+                if (int.TryParse(row["Suivant"]?.ToString(), out int idDest) && noeuds.ContainsKey(idSource) && noeuds.ContainsKey(idDest))
                 {
-                    double poids = double.TryParse(row["Temps entre 2 stations"]?.ToString(), out double t1) ? t1 : 1;
-                    graphe.AjouterLien(Noeuds[precedentId], Noeuds[idStation], (int)poids);
+                    int poids = TryGetTemps(row["Temps entre 2 stations"]?.ToString());
+                    graphe.AjouterLien(noeuds[idSource], noeuds[idDest], poids);
                 }
 
-                // Suivant
-                if (int.TryParse(row["Suivant"]?.ToString(), out int suivantId))
+                if (int.TryParse(row["Précédent"]?.ToString(), out int idPred) && noeuds.ContainsKey(idPred) && noeuds.ContainsKey(idSource))
                 {
-                    double poids = double.TryParse(row["Temps entre 2 stations"]?.ToString(), out double t2) ? t2 : 1;
-                    graphe.AjouterLien(Noeuds[idStation], Noeuds[suivantId], (int)poids);
+                    int poids = TryGetTemps(row["Temps entre 2 stations"]?.ToString());
+                    graphe.AjouterLien(noeuds[idPred], noeuds[idSource], poids);
+                }
+
+                // Cas du changement de ligne (correspondance)
+                if (int.TryParse(row["Temps de Changement"]?.ToString(), out int changement) && changement > 0)
+                {
+                    graphe.AjouterLien(noeuds[idSource], noeuds[idSource], changement); // lien station vers elle-même
                 }
             }
+        }
+
+        private static int TryGetTemps(string valeur)
+        {
+            return int.TryParse(valeur, out int res) ? res : 1;
         }
     }
 }
