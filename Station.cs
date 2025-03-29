@@ -22,7 +22,7 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
         public double Longitude { get { return longitude; } }
 
 
-        public Station(int id, string nom, string ligne, double longitude, double latitude)
+        public Station(int id, string nom, string ligne, double latitude, double longitude)
         {
             this.id = id;
             this.nom = nom;

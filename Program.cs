@@ -1,4 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using MySql.Data.MySqlClient;
 using Projet_PSI_DELAROCHE_DEGARDIN_DARMON;
 
 class Program
@@ -56,16 +57,44 @@ class Program
         var grapheMetro = new Graphe<Station>();
 
         // Chemin vers le fichier Excel
-        string cheminFichier = "MetroParis.xlsx"; // à adapter si dans un dossier
+        //string cheminFichier = "MetroParis.xlsx"; // à adapter si dans un dossier
 
         // Importation
 
-        LectureCSV.ChargerInfosCSV(cheminFichier, grapheMetro);
+        //LectureCSV.ChargerInfosCSV(cheminFichier, grapheMetro);
 
-        Console.WriteLine($"Nombre de stations : {grapheMetro.Noeuds.Count}");
-        Console.WriteLine($"Nombre de liaisons : {grapheMetro.Liens.Count}");
+        //Console.WriteLine($"Nombre de stations : {grapheMetro.Noeuds.Count}");
+        //Console.WriteLine($"Nombre de liaisons : {grapheMetro.Liens.Count}");
 
         // Exemple : afficher la liste d'adjacence
-        graphe.AfficherListeAdjacence();
+        //graphe.AfficherListeAdjacence();
+
+
+        // Autre méthode via MySQL :
+
+        string cheminSQL = "server=localhost;user=root;password=root;database=metro;";
+
+        // Petit test :
+
+        using var connection = new MySqlConnection(cheminSQL);
+
+        try
+        {
+            connection.Open();
+            Console.WriteLine("✅ Connexion réussie à MySQL !");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("❌ Échec de la connexion : " + ex.Message);
+        }
+
+
+         
+        ImporteurMySQL.Charger(cheminSQL, grapheMetro);
+
+        Console.WriteLine($"Stations : {grapheMetro.Noeuds.Count}");
+        Console.WriteLine($"Liaisons : {grapheMetro.Liens.Count}");
+
+
     }
 }
