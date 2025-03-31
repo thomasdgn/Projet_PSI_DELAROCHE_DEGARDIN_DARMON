@@ -19,6 +19,8 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
 
         public Dictionary<(Noeud<T>, Noeud<T>), int> MatriceAdjacence { get { return matriceAdjacence; } }
 
+
+
         public void AjouterNoeud(Noeud<T> n)
         {
             if (!Noeuds.Contains(n))
@@ -27,15 +29,17 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
                 ListeAdjacence[n] = new List<Noeud<T>>();
             }
         }
-        
+
+
         public void AjouterLien(Noeud<T> depart, Noeud<T> arrivee, int poids = 1)
         {
             Liens.Add(new Lien<T>(depart, arrivee, poids));
             ListeAdjacence[depart].Add(arrivee);
-            ListeAdjacence[arrivee].Add(depart); // Utile si graphe non orienté
+            ListeAdjacence[arrivee].Add(depart); //utile si graphe non orienté
             MatriceAdjacence[(depart, arrivee)] = poids;
             MatriceAdjacence[(arrivee, depart)] = poids;
         }
+
 
         public void AfficherListeAdjacence()
         {
@@ -50,12 +54,13 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
             }
         }
 
+
+
         public void AfficherMatriceAdjacence()
         {
             Console.WriteLine("Matrice d'adjacence :");
 
             // En-tête
-
             Console.Write("     ");
             foreach (var col in Noeuds)
             {
@@ -81,7 +86,7 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
 
 
 
-        // Algorithme BFS
+        // Algorithme BFS :
 
         public void BFS(Noeud<T> depart)
         {
@@ -94,11 +99,11 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
 
             Console.WriteLine("Algorithme BFS :");
 
-            while(file.Count > 0)
+            while (file.Count > 0)
             {
                 Noeud<T> a = file.Dequeue();
                 Console.WriteLine("Visite de : " + a);
-                
+
 
                 foreach (var voisin in ListeAdjacence[a])
                 {
@@ -113,7 +118,8 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
 
 
 
-        // Algorithme DFS
+        // Algorithme DFS :
+
         public void DFS(Noeud<T> depart)
         {
             HashSet<Noeud<T>> visites = new HashSet<Noeud<T>>();
@@ -121,6 +127,7 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
             Console.WriteLine("Algorithme DFS :");
             DFSRecursive(depart, visites);
         }
+
 
 
         private void DFSRecursive(Noeud<T> a, HashSet<Noeud<T>> visites)
@@ -138,7 +145,8 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
         }
 
 
-        // Test de connexité
+
+        // Test de connexité :
 
         public bool EstConnexe()
         {
@@ -161,6 +169,7 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
             return res;
         }
 
+
         private void ExplorerDFS(Noeud<T> a, HashSet<Noeud<T>> visites)
         {
             visites.Add(a);
@@ -174,7 +183,9 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
             }
         }
 
-        // Test détection de cycles
+
+
+        // Test détection de cycles :
 
         public bool ContientCycle()
         {
@@ -194,6 +205,7 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
 
             return res;
         }
+
 
         private bool DetecterCycleDFS(Noeud<T> a, HashSet<Noeud<T>> visites, Noeud<T> pred)
         {
@@ -217,5 +229,7 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
 
             return res;
         }
+
+
     }
 }

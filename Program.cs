@@ -1,72 +1,93 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using MySql.Data.MySqlClient;
 using Projet_PSI_DELAROCHE_DEGARDIN_DARMON;
 
 class Program
 {
     static void Main(string[] args)
     {
-        // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-        // Création du graphe de test
-        var graphe = new Graphe<string>();
-
-        var A = new Noeud<string>("A");
-        var B = new Noeud<string>("B");
-        var C = new Noeud<string>("C");
-        var D = new Noeud<string>("D");
-
-        graphe.AjouterNoeud(A);
-        graphe.AjouterNoeud(B);
-        graphe.AjouterNoeud(C);
-        graphe.AjouterNoeud(D);
-
-        graphe.AjouterLien(A, B);
-        graphe.AjouterLien(A, C);
-        graphe.AjouterLien(B, D);
-        graphe.AjouterLien(C, D);
-
-        // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-        // 📋 2. Affichage des structures
-        Console.WriteLine("===== Liste d'adjacence =====");
-        graphe.AfficherListeAdjacence();
-
-        Console.WriteLine("\n===== Matrice d'adjacence =====");
-        graphe.AfficherMatriceAdjacence();
-
-        // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-        // Parcours BFS
-        Console.WriteLine("\n===== Parcours en largeur (BFS) depuis A =====");
-        graphe.BFS(A);
-
-        // Parcours DFS
-        Console.WriteLine("\n===== Parcours en profondeur (DFS) depuis A =====");
-        graphe.DFS(A);
-
-        // Test Connexité
-        Console.WriteLine("\n===== Test de connexité =====");
-        bool connexe = graphe.EstConnexe();
-        Console.WriteLine(connexe ? "Le graphe est connexe." : "Le graphe n'est pas connexe.");
-
-        // Test Cycle
-        Console.WriteLine("\n===== Détection de cycle =====");
-        bool aCycle = graphe.ContientCycle();
-        Console.WriteLine(aCycle ? "Le graphe contient un cycle." : "Le graphe ne contient pas de cycle.");
-
-
-        // Test importation du .csv
+        // 7. Test importation du .csv
         var grapheMetro = new Graphe<Station>();
 
-        // Chemin vers le fichier Excel
-        string cheminFichier = "MetroParis.xlsx"; // A adapter si dans un dossier
 
-        // Importation
-        //LectureCSV.ChargerInfosCSV(cheminFichier, grapheMetro);
+        // Import données via MySQL :
 
-        //Console.WriteLine("Import terminé !");
-        //Console.WriteLine($"Nombre de stations : {grapheMetro.Noeuds.Count}");
-        //Console.WriteLine($"Nombre de liaisons : {grapheMetro.Liens.Count}");
+        string cheminSQL = "server=localhost;user=root;password=root;database=metro;";
 
-        // Exemple de parcours
-        //var premier = grapheMetro.Noeuds[0];
-        //grapheMetro.BFS(premier);
+        ImporteurMySQL.Charger(cheminSQL, grapheMetro);
+
+        Console.WriteLine("===== PLAN DU MÉTRO DE PARIS =====");
+
+        while (true)
+        {
+            Console.WriteLine("\nMenu :");
+            Console.WriteLine("1. Lister toutes les stations");
+            Console.WriteLine("2. Rechercher une station");
+            Console.WriteLine("3. Calculer un itinéraire (chemin le plus court)");
+            Console.WriteLine("4. Quitter");
+            Console.Write("Votre choix : ");
+            var choix = Console.ReadLine();
+
+            switch (choix)
+            {
+                case "1":
+                    ListerStations(grapheMetro);
+                    break;
+                case "2":
+                    RechercherStation(grapheMetro);
+                    break;
+                case "3":
+                    // CalculerItineraire(grapheMetro); (Clément doit s'en occuper)
+                    break;
+                case "4":
+                    Console.WriteLine("À bientôt !");
+                    return;
+                default:
+                    Console.WriteLine("Choix invalide.");
+                    break;
+            }
+        }
+
+
+
+        // Début de l'interface graphique :
+
+
+        static void ListerStations(Graphe<Station> graphe)
+        {
+            Console.WriteLine("\n--- Liste des stations ---");
+            foreach (var noeud in graphe.Noeuds)
+            {
+                Console.WriteLine($"- {noeud.Valeur}");
+            }
+        }
+
+
+        static void RechercherStation(Graphe<Station> graphe)
+        {
+            Console.Write("\nEntrez un mot-clé pour rechercher une station : ");
+            string saisie = Console.ReadLine()?.ToLower();
+
+            var resultats = graphe.Noeuds
+                .Where(n => n.Valeur.Nom.ToLower().Contains(saisie))
+                .Select(n => n.Valeur)
+                .ToList();
+
+            if (resultats.Count == 0)
+            {
+                Console.WriteLine("Aucune station trouvée.");
+            }
+            else
+            {
+                Console.WriteLine("Résultats :");
+                foreach (var station in resultats)
+                {
+                    Console.WriteLine($"- {station}");
+                }
+            }
+        }
+
+
+
     }
 }
