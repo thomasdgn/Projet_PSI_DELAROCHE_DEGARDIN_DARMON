@@ -49,9 +49,7 @@ class Program
         }
 
 
-
         // Début de l'interface graphique :
-
 
         static void ListerStations(Graphe<Station> graphe)
         {
@@ -61,7 +59,6 @@ class Program
                 Console.WriteLine($"- {noeud.Valeur}");
             }
         }
-
 
         static void RechercherStation(Graphe<Station> graphe)
         {
@@ -86,8 +83,5 @@ class Program
                 }
             }
         }
-
-
-
     }
 }

@@ -20,7 +20,6 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
         public Dictionary<(Noeud<T>, Noeud<T>), int> MatriceAdjacence { get { return matriceAdjacence; } }
 
 
-
         public void AjouterNoeud(Noeud<T> n)
         {
             if (!Noeuds.Contains(n))
@@ -55,7 +54,6 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
         }
 
 
-
         public void AfficherMatriceAdjacence()
         {
             Console.WriteLine("Matrice d'adjacence :");
@@ -85,9 +83,7 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
         }
 
 
-
         // Algorithme BFS :
-
         public void BFS(Noeud<T> depart)
         {
             HashSet<Noeud<T>> visites = new HashSet<Noeud<T>>();
@@ -117,7 +113,6 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
         }
 
 
-
         // Algorithme DFS :
 
         public void DFS(Noeud<T> depart)
@@ -127,7 +122,6 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
             Console.WriteLine("Algorithme DFS :");
             DFSRecursive(depart, visites);
         }
-
 
 
         private void DFSRecursive(Noeud<T> a, HashSet<Noeud<T>> visites)
@@ -143,7 +137,6 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
                 }
             }
         }
-
 
 
         // Test de connexité :
@@ -202,7 +195,6 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
                     }
                 }
             }
-
             return res;
         }
 
@@ -226,10 +218,7 @@ namespace Projet_PSI_DELAROCHE_DEGARDIN_DARMON
                     res = true;
                 }
             }
-
             return res;
         }
-
-
     }
 }
