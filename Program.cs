@@ -10,6 +10,10 @@ class Program
     [STAThread] // WPF !
     static void Main(string[] args)
     {
+
+        var app = new Application();
+        var fenetre = new VisualisationWPF.MainWindow(graphe); // passage du graphe
+        app.Run(fenetre);
         // 7. Test importation du .csv
         var grapheMetro = new Graphe<Station>();
 
