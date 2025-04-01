@@ -1,9 +1,13 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using MySql.Data.MySqlClient;
 using Projet_PSI_DELAROCHE_DEGARDIN_DARMON;
+using System.Windows;
+using static System.Net.Mime.MediaTypeNames;
+using System;
 
 class Program
 {
+    [STAThread] // WPF !
     static void Main(string[] args)
     {
         // 7. Test importation du .csv
@@ -14,7 +18,10 @@ class Program
 
         string cheminSQL = "server=localhost;user=root;password=root;database=metro;";
 
-        ImporteurMySQL.Charger(cheminSQL, grapheMetro);
+        Graphe<Station> graphe = new Graphe<Station>();
+        ImporteurMySQL.Charger(cheminSQL, graphe);
+
+        LancerWPF(graphe);
 
         Console.WriteLine("===== PLAN DU MÉTRO DE PARIS =====");
 
@@ -48,46 +55,51 @@ class Program
             }
         }
 
+    }
 
 
-        // Début de l'interface graphique :
+    // Début de l'interface graphique :
 
 
-        static void ListerStations(Graphe<Station> graphe)
+    static void ListerStations(Graphe<Station> graphe)
+    {
+        Console.WriteLine("\n--- Liste des stations ---");
+        foreach (var noeud in graphe.Noeuds)
         {
-            Console.WriteLine("\n--- Liste des stations ---");
-            foreach (var noeud in graphe.Noeuds)
+            Console.WriteLine($"- {noeud.Valeur}");
+        }
+    }
+
+
+    static void RechercherStation(Graphe<Station> graphe)
+    {
+        Console.Write("\nEntrez un mot-clé pour rechercher une station : ");
+        string saisie = Console.ReadLine()?.ToLower();
+
+        var resultats = graphe.Noeuds
+            .Where(n => n.Valeur.Nom.ToLower().Contains(saisie))
+            .Select(n => n.Valeur)
+            .ToList();
+
+        if (resultats.Count == 0)
+        {
+            Console.WriteLine("Aucune station trouvée.");
+        }
+        else
+        {
+            Console.WriteLine("Résultats :");
+            foreach (var station in resultats)
             {
-                Console.WriteLine($"- {noeud.Valeur}");
+                Console.WriteLine($"- {station}");
             }
         }
+    }
 
 
-        static void RechercherStation(Graphe<Station> graphe)
-        {
-            Console.Write("\nEntrez un mot-clé pour rechercher une station : ");
-            string saisie = Console.ReadLine()?.ToLower();
-
-            var resultats = graphe.Noeuds
-                .Where(n => n.Valeur.Nom.ToLower().Contains(saisie))
-                .Select(n => n.Valeur)
-                .ToList();
-
-            if (resultats.Count == 0)
-            {
-                Console.WriteLine("Aucune station trouvée.");
-            }
-            else
-            {
-                Console.WriteLine("Résultats :");
-                foreach (var station in resultats)
-                {
-                    Console.WriteLine($"- {station}");
-                }
-            }
-        }
-
-
-
+    static void LancerWPF(Graphe<Station> graphe)
+    {
+        var app = new Application();
+        var fenetre = new VisualisationWPF.MainWindow(graphe); // passage du graphe
+        app.Run(fenetre);
     }
 }
